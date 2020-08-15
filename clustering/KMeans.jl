@@ -1,4 +1,4 @@
-""" Implementacao do algoritmo KMeans em Julia """
+""" Implementacao do algoritmo KMeans (Naive) em Julia """
 
 using Distributions
 using Random
@@ -60,7 +60,7 @@ end
 function kmeans(n_groups)
     centroids = [X[random_index(X), :] for i = 1:n_groups]
     temp_centroids_vectors = Any[]
-    inertia = Inf    
+    inertia = Inf
 
     # Loop
     while inertia ≥ 0.00001
@@ -77,9 +77,8 @@ function kmeans(n_groups)
         centroids = new_centroids
         println("Current inertia: ", inertia)
     end
-
     return centroids
 end
 
 final_centroids = kmeans(2)
-println("Final centroids", final_centroids)
+println("\nFinal centroids:\n", final_centroids)
