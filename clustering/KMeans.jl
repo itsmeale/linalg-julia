@@ -2,7 +2,6 @@
 
 using Distributions
 using Random
-using Plots
 
 # Primeiramente vamos criar alguns grupos fictícios
 # Vamos definir a média e a variância dos dois grupos
@@ -13,18 +12,17 @@ const σ = 1.5
 norm_a = Normal(μ_group_a, σ)
 norm_b = Normal(μ_group_b, σ)
 # Finalmente geramos os números para as distribuições instanciadas anteriormente
-A = rand(norm_a, 1000, 2)
-B = rand(norm_b, 1000, 2)
+A = rand(norm_a, 100000, 2)
+B = rand(norm_b, 100000, 2)
 # A função vcat faz a concatenação vertical das matrizes
 X = vcat(A, B)
 
 # Funções auxiliares
-indexes(X) = 1:size(X)[1]
-random_index(X) = sample(indexes(X))
+random_index(X) = sample(axes(X, 1))
 euclidean_distance(v, w) = √sum((v-w).^2)
 
 # Encontra o centroid mais similar ao vetor v
-function find_closest_centroid(v, centroids, temp_centroids_vectors)
+function find_closest_centroid!(v, centroids, temp_centroids_vectors)
     min_distance = Inf
     selected_centroid = -1
     for (index, centroid) in enumerate(centroids)
@@ -59,18 +57,18 @@ end
 
 function kmeans(n_groups)
     centroids = [X[random_index(X), :] for i = 1:n_groups]
-    temp_centroids_vectors = Any[]
+    temp_centroids_vectors = []
     inertia = Inf
 
     # Loop
-    while inertia ≥ 0.00001
+    while inertia ≥ 0.01
         empty!(temp_centroids_vectors)
         for i=1:n_groups
             push!(temp_centroids_vectors, [])
         end
 
-        for i in indexes(X)
-            find_closest_centroid(X[i, :], centroids, temp_centroids_vectors)
+        for i=axes(X, 1)
+            find_closest_centroid!(X[i, :], centroids, temp_centroids_vectors)
         end
         new_centroids = compute_new_centroids(temp_centroids_vectors, n_groups)
         inertia = compute_inertia(centroids, new_centroids, n_groups)
@@ -80,5 +78,5 @@ function kmeans(n_groups)
     return centroids
 end
 
-final_centroids = kmeans(2)
+final_centroids = kmeans(3)
 println("\nFinal centroids:\n", final_centroids)
