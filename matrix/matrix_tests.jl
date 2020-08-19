@@ -1,19 +1,16 @@
 using Distributions
 
-A = [
-    1 2
-    1 2
-    2 3
-    2 3
-]
+A = [NaN, NaN]
+v = [1; 2]
+w = [4; 1]
 
-v = A[sample(axes(A, 1)), :]
-w = A[sample(axes(A, 1)), :]
+A = hcat(A, v, w)[:, 2:end]
 
-println(v)
-println(w)
+display(A)
 
-B = Array{Int32}[A[sample(axes(A, 1)), :] for i=1:2]
+B = [NaN NaN]
+x = [1 2]
+y = [4 1]
 
-println(A)
-println(B)
+B = vcat(B, x, y)[2:end, :]
+display(B)

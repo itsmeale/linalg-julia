@@ -40,7 +40,7 @@ function gs_basis(A::Union{Array{Float64}, Array{Int64}})
     ε::Float64 = 1e-10
 
     for i=axes(A, 2)
-        for j::Int32=1:i
+        for j=1:i-1
             B[:, i] = B[:, i] - dot(B[:, i], B[:, j]) * B[:, j]
         end
 
@@ -51,7 +51,6 @@ function gs_basis(A::Union{Array{Float64}, Array{Int64}})
             B[:, i] = zeros(size(B[:, i]))
         end
     end
-
     return B
 end
 
@@ -61,4 +60,11 @@ A = [
     0 2 4 2
     3 1 2 4
 ]
-basis = gs_basis(A)
+a_basis = gs_basis(A)
+
+B = [
+    2 5 0
+    1 1 1
+    0 0 1
+]
+b_basis = gs_basis(B)
